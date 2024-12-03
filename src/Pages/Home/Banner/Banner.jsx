@@ -15,7 +15,7 @@ const Banner = () => {
         autoPlay={true}
         infiniteLoop={true}
         showStatus={false}
-        showThumbs={false}
+        showThumbs={true}
         interval={3500}
       >
         <div>
