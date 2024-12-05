@@ -1,9 +1,10 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { FreeMode, Pagination } from "swiper/modules";
+import { Autoplay, FreeMode, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/free-mode";
+import "swiper/css/autoplay";
 
 import slide1 from "../../../assets/home/slide1.jpg";
 import slide2 from "../../../assets/home/slide2.jpg";
@@ -22,13 +23,15 @@ const Category = () => {
       <Swiper
         slidesPerView={4}
         spaceBetween={30}
-        autoPlay={true}
-        infiniteLoop={true}
+        autoplay={{
+          delay: 3500,
+          disableOnInteraction: true,
+        }}
         freeMode={true}
         pagination={{
           clickable: true,
         }}
-        modules={[FreeMode, Pagination]}
+        modules={[FreeMode, Pagination, Autoplay]}
         className="mySwiper mb-5"
       >
         <SwiperSlide>
