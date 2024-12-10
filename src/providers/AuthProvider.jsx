@@ -29,13 +29,13 @@ const AuthProvider = ({ children }) => {
   const logOut = () => {
     setLoading(true);
     return signOut(auth);
-    };
-    
-    const updateUserProfile = (name) => {
-        return updateProfile(auth.currentUser, {
-            displayName: name
-        })
-    }
+  };
+
+  const updateUserProfile = (name) => {
+    return updateProfile(auth.currentUser, {
+      displayName: name,
+    });
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
