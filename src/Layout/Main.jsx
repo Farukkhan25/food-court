@@ -4,6 +4,7 @@ import NavBar from "../Pages/Shared/NavBar/NavBar";
 
 
 const Main = () => {
+    //To Hide Navbar and Footer in login and signup page
     const location = useLocation();
     console.log(location);
     const isLogin =

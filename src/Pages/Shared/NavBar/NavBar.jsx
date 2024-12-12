@@ -27,7 +27,7 @@ const NavBar = () => {
         <Link to={"/order/salad"}>Order</Link>
       </li>
       <li>
-        <Link to={"/"}>
+        <Link to={"/dashboard/cart"}>
           <button className="flex relative">
             <FaCartArrowDown  className="text-yellow-300 text-2xl"/>
             <div className="badge badge-secondary px-1 py-0 m-1 font-mono absolute left-3 top-2">{cart.length}</div>
@@ -78,7 +78,7 @@ const NavBar = () => {
               {navOptions}
             </ul>
           </div>
-          <a className="btn btn-ghost text-xl font-Cinzel">Food Court</a>
+          <NavLink to='/' className="btn btn-ghost text-xl font-Cinzel">Food Court</NavLink>
         </div>
         <div className="navbar-center hidden lg:flex ">
           <ul className="menu menu-horizontal px-1">{navOptions}</ul>
