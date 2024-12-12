@@ -1,51 +1,64 @@
-import React, { useContext, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
+import React, { useContext, useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
-import { Link, Navigate } from 'react-router-dom';
-import { AuthContext } from '../../providers/AuthProvider';
-import Swal from 'sweetalert2';
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../providers/AuthProvider";
+import Swal from "sweetalert2";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const SignUp = () => {
-    const {
-      register,
-      handleSubmit,
-        watch,
-      reset,
-      formState: { errors },
-    } = useForm();
+  const axiosPublic = useAxiosPublic();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm();
 
-    const { createUser, updateUserProfile } = useContext(AuthContext);
+  const { createUser, updateUserProfile } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-    // const [error, setError] = useState("");
+  // const [error, setError] = useState("");
 
-    const onSubmit = (data) => {
-        console.log(data);
-        createUser(data.email, data.password)
-            .then(result => {
-                const loggedUser = result.user;
-                console.log(loggedUser);
-                updateUserProfile(data.name)
-                    .then(() => {
-                        console.log('user profile info updated');
-                        reset();
-                    Swal.fire({
-                      position: "top-end",
-                      icon: "success",
-                      title: "User created successfully!",
-                      showConfirmButton: false,
-                      timer: 1500,
-                    }); 
-                        Navigate('/');    
-                    })
-                .catch(error=>console.log(error))
+  const onSubmit = (data) => {
+    console.log(data);
+    createUser(data.email, data.password).then((result) => {
+      const loggedUser = result.user;
+      console.log(loggedUser);
+      updateUserProfile(data.name)
+        .then(() => {
+          //create user entry in the database
+          const userInfo = {
+            name: data.name,
+            email: data.email,
+          };
+          axiosPublic.post("/users", userInfo)
+            .then(res => {
+            
+              if (res.data.insertedId) {
+                console.log("user added to the database");
+                reset();
+                Swal.fire({
+                  position: "top-end",
+                  icon: "success",
+                  title: "User created successfully!",
+                  showConfirmButton: false,
+                  timer: 1500,
+                });
+                navigate("/");
+              }
+            })
         })
-    };
+        .catch((error) => console.log(error));
+    });
+  };
 
-    return (
-        <>
-            <Helmet>
-                <title>Food Court | Sign Up</title>
-            </Helmet>
+  return (
+    <>
+      <Helmet>
+        <title>Food Court | Sign Up</title>
+      </Helmet>
       <div className="hero w-full my-20">
         <div className="hero-content grid gap-20 md:grid-cols-2 flex-col lg:flex-row">
           <div className="text-center lg:text-left">
@@ -100,8 +113,7 @@ const SignUp = () => {
                     required: true,
                     minLength: 6,
                     maxLength: 20,
-                    pattern:
-                      /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z])/,
+                    pattern: /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z])/,
                   })}
                   aria-invalid={errors.password ? "true" : "false"}
                   name="password"
@@ -127,7 +139,7 @@ const SignUp = () => {
                   </p>
                 )}
               </div>
-              
+
               <div className="form-control mt-6">
                 <input
                   className="btn btn-primary"
@@ -146,8 +158,8 @@ const SignUp = () => {
           </div>
         </div>
       </div>
-        </>
-    );
+    </>
+  );
 };
 
 export default SignUp;
