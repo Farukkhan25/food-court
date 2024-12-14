@@ -1,24 +1,36 @@
 import React from "react";
-import {
+import {  
   FaCalendar,
   FaCalendarCheck,
   FaCartArrowDown,
   FaHome,
+  FaList,
+  FaUsers,
+  FaUtensils,
 } from "react-icons/fa";
 import { IoWallet } from "react-icons/io5";
-import { MdRateReview, MdRestaurantMenu } from "react-icons/md";
+import {
+  MdRateReview,
+  MdRestaurantMenu,
+  MdFoodBank,
+} from "react-icons/md";
 import { RiHomeHeartFill } from "react-icons/ri";
+import { LuNotebookPen } from "react-icons/lu";
 import { NavLink, Outlet } from "react-router-dom";
 import useCart from "../hooks/useCart";
+import useAdmin from "../hooks/useAdmin";
 
 const Dashboard = () => {
-  const [cart] = useCart();
+    const [cart] = useCart();
+    
+    //get isAdmin value from the database
+    const [isAdmin] = useAdmin();
 
   return (
     <div className="flex">
       {/* Dashboard side bar */}
 
-      <div className="w-72 min-h-screen bg-orange-400">
+      <div className="w-78 min-h-screen bg-orange-400">
         <div>
           <NavLink
             to="/"
@@ -28,42 +40,79 @@ const Dashboard = () => {
           </NavLink>
         </div>
         <ul className="menu p-4 uppercase font-bold text-xl">
-          <li>
-            <NavLink to="/dashboard/userHome">
-              <RiHomeHeartFill></RiHomeHeartFill>
-              user home
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/dashboard/reservation">
-              <FaCalendar></FaCalendar>
-              reservation
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/dashboard/payment">
-              <IoWallet></IoWallet>
-              payment history
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/dashboard/cart">
-              <FaCartArrowDown></FaCartArrowDown>
-              My Cart ({cart.length})
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/dashboard/review">
-              <MdRateReview></MdRateReview>
-              add review
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/dashboard/booking">
-              <FaCalendarCheck></FaCalendarCheck>
-              my booking
-            </NavLink>
-          </li>
+          {isAdmin ? (
+            <>
+              <li>
+                <NavLink to="/dashboard/adminHome">
+                  <RiHomeHeartFill></RiHomeHeartFill>
+                  Admin home
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/dashboard/addItems">
+                  <FaUtensils />
+                  Add Items
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/dashboard/manageItems">
+                  <MdFoodBank></MdFoodBank>
+                  Manage Items
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/dashboard/bookings">
+                  <LuNotebookPen></LuNotebookPen>
+                  Manage Bookings
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/dashboard/users">
+                  <FaUsers></FaUsers>
+                  All Users
+                </NavLink>
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <NavLink to="/dashboard/userHome">
+                  <RiHomeHeartFill></RiHomeHeartFill>
+                  user home
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/dashboard/reservation">
+                  <FaCalendar></FaCalendar>
+                  reservation
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/dashboard/payment">
+                  <IoWallet></IoWallet>
+                  payment history
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/dashboard/cart">
+                  <FaCartArrowDown></FaCartArrowDown>
+                  My Cart ({cart.length})
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/dashboard/review">
+                  <MdRateReview></MdRateReview>
+                  add review
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/dashboard/booking">
+                  <FaCalendarCheck></FaCalendarCheck>
+                  my booking
+                </NavLink>
+              </li>
+            </>
+          )}
           <div className="divider"></div>
           <li>
             <NavLink to="/">
