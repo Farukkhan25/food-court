@@ -1,17 +1,22 @@
 import React from "react";
 import SectionTitle from "../../../components/SectionTitle/SectionTitle";
+import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { LuUtensils } from "react-icons/lu";
+import Swal from "sweetalert2";
 import useAxiosPublic from "../../../hooks/useAxiosPublic";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import Swal from "sweetalert2";
+import { LuUtensils } from "react-icons/lu";
 
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
-const AddItems = () => {
+
+const UpdateItem = () => {
+  const { name, category, recipe, price, _id } = useLoaderData();
   const { register, handleSubmit, reset } = useForm();
   const axiosPublic = useAxiosPublic();
   const axiosSecure = useAxiosSecure();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const onSubmit = async (data) => {
     console.log(data);
@@ -27,34 +32,35 @@ const AddItems = () => {
       const menuItem = {
         name: data.name,
         recipe: data.recipe,
-        image: res.data.data.display_url,
+        image: res.data?.data.display_url,
         category: data.category,
         price: parseFloat(data.price),
       };
 
-      const menuRes = await axiosSecure.post("/menu", menuItem);
+      const menuRes = await axiosSecure.patch(`/menu/${_id}`, menuItem);
       console.log(menuRes.data);
-      if (menuRes.data.insertedId) {
+      if (menuRes.data.modifiedCount > 0) {
         // show success popup
-        reset();
+        // reset();
         Swal.fire({
           position: "top-end",
           icon: "success",
-          title: `${data.name} is added to the menu.`,
+          title: `${data.name} is updated to the menu.`,
           showConfirmButton: false,
           timer: 1500,
         });
+        navigate("/dashboard/manageItems", { state: { from: location } });
       }
     }
-    console.log("with image url", res.data);
   };
 
   return (
     <div>
       <SectionTitle
-        heading="Add an Item"
-        subHeading={"What's New ?"}
+        heading={"Update an Item"}
+        subHeading={"Refresh Info"}
       ></SectionTitle>
+
       <div className="bg-indigo-100 p-10 m-5 rounded-box">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="form-control w-full">
@@ -63,8 +69,10 @@ const AddItems = () => {
             </label>
             <input
               type="text"
+              defaultValue={name}
               placeholder="Recipe Name"
               {...register("name", { required: true })}
+              required
               className="input input-bordered input-info w-full "
             />
           </div>
@@ -76,7 +84,7 @@ const AddItems = () => {
                 <span className="label-text">Category*</span>
               </label>
               <select
-                defaultChecked="default"
+                defaultChecked={category}
                 {...register("category", { required: true })}
                 className="select select-info w-full "
               >
@@ -97,6 +105,7 @@ const AddItems = () => {
               </label>
               <input
                 type="text"
+                defaultValue={price}
                 placeholder="Recipe Name"
                 {...register("price", { required: true })}
                 className="input input-bordered input-info w-full "
@@ -109,6 +118,7 @@ const AddItems = () => {
               <span className="label-text">Recipe Details</span>
             </div>
             <textarea
+              defaultValue={recipe}
               className="textarea textarea-bordered textarea-info h-24"
               placeholder="Write Recipe Details Here....."
               {...register("recipe", { required: true })}
@@ -117,14 +127,15 @@ const AddItems = () => {
 
           <div className="form-control w-full my-6">
             <input
+              //   defaultValue={image}
               type="file"
               {...register("image", { required: true })}
               className="file-input file-input-bordered file-input-info hover:file-input-success hover:text-rose-700 font-semibold w-full max-w-xs"
             />
           </div>
-          <div className=" flex justify-center py-2">
-            <button className="btn btn-outline sm:btn-sm md:btn-md w-1/2 uppercase border-0 border-b-4 border-t-4 border-rose-700 mt-4 text-purple-900 md:text-2xl font-Cinzel font-bold bg-slate-100 hover:bg-sky-400">
-              Add Item{" "}
+          <div className=" flex justify-center w-full items-center">
+            <button className="btn btn-outline sm:btn-sm md:btn-md md:max-w-full  lg:w-1/3 uppercase border-0 border-b-4 border-t-4 border-rose-700 mt-4 text-purple-900 md:text-xl lg:text-2xl font-Cinzel font-bold bg-slate-100 hover:bg-sky-400">
+              Update Item{" "}
               <LuUtensils className="text-2xl md:text-4xl text-slate-800" />
             </button>
           </div>
@@ -134,4 +145,4 @@ const AddItems = () => {
   );
 };
 
-export default AddItems;
+export default UpdateItem;
