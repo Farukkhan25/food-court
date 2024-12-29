@@ -4,6 +4,7 @@ import { BiSolidFoodMenu } from "react-icons/bi";
 import { FaTrashAlt } from "react-icons/fa";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
   const [cart, refetch] = useCart();
@@ -23,7 +24,7 @@ const Cart = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axiosSecure.delete(`/carts/${id}`).then((res) => {
-          if(res.data.deletedCount > 0) {
+          if (res.data.deletedCount > 0) {
             refetch();
             Swal.fire({
               title: "Deleted!",
@@ -41,7 +42,13 @@ const Cart = () => {
       <div className="bg-purple-200 flex justify-around py-1 mb-8 rounded-t-xl ">
         <h2 className="text-3xl">Items: {cart.length}</h2>
         <h2 className="text-3xl">Total Price: ${totalPrice}</h2>
-        <button className="btn bg-red-600 text-white text-3xl">PAY</button>
+        {cart.length ? (
+          <Link to={"/dashboard/payment"}>
+            <button className="btn bg-red-600 text-white text-3xl">PAY</button>
+          </Link>
+        ) : (
+          ""
+        )}
       </div>
       {/* Table Contents */}
       <div className="overflow-x-auto ">
