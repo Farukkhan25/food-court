@@ -41,7 +41,7 @@ const Cart = () => {
     <div>
       <div className="bg-purple-200 flex justify-around py-1 mb-8 rounded-t-xl ">
         <h2 className="text-3xl">Items: {cart.length}</h2>
-        <h2 className="text-3xl">Total Price: ${totalPrice}</h2>
+        <h2 className="text-3xl">Total Price: {totalPrice}</h2>
         {cart.length ? (
           <Link to={"/dashboard/payment"}>
             <button className="btn bg-red-600 text-white text-3xl">PAY</button>

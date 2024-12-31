@@ -53,7 +53,7 @@ const CheckoutForm = () => {
       console.log('payment error', error);
       setError(error.message);
     } else {
-      console.log("PaymentMethod", paymentMethod);
+      console.log("Payment Method", paymentMethod);
       setError('');
     }
 
@@ -85,7 +85,7 @@ const CheckoutForm = () => {
           date: new Date(), // utc date convert, use moment js
           cartIds: cart.map((item) => item._id),
           menuItemIds: cart.map((item) => item.menuId),
-          status: "pending",
+          status: "success",
         };
 
         const res = await axiosSecure.post("/payments", payment);

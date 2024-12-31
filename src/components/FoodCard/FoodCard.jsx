@@ -12,14 +12,14 @@ const FoodCard = ({ item }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const axiosSecure = useAxiosSecure();
-  const [, refetch] = useCart();
+  const [cart, refetch] = useCart();
 
   const handleAddToCart = () => {
     if (user && user.email) {
       // Send cart item to the database
       // console.log(food, user.email);
       const cartItem = {
-        manuId: _id,
+        menuId: _id,
         email: user.email,
         name,
         image,
